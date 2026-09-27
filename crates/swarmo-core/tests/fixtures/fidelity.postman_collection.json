@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "Fidelity",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "tok", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Encoded query",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://x.test/search?q=hello%20world&email=a%40b.com&t=a+b",
+          "query": [
+            { "key": "q", "value": "hello%20world" },
+            { "key": "email", "value": "a%40b.com" },
+            { "key": "t", "value": "a+b" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Path variables",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://x.test/users/:userId/posts/:postId?full=1",
+          "path": ["users", ":userId", "posts", ":postId"],
+          "query": [{ "key": "full", "value": "1" }],
+          "variable": [
+            { "key": "userId", "value": "42" },
+            { "key": "postId", "value": "" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Null auth",
+      "request": {
+        "method": "GET",
+        "auth": null,
+        "url": { "raw": "https://x.test/null-auth" }
+      }
+    },
+    {
+      "name": "Typeless auth",
+      "request": {
+        "method": "GET",
+        "auth": {},
+        "url": { "raw": "https://x.test/typeless-auth" }
+      }
+    },
+    {
+      "name": "XML body",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "https://x.test/xml" },
+        "body": {
+          "mode": "raw",
+          "raw": "<a>1</a>",
+          "options": { "raw": { "language": "xml" } }
+        }
+      }
+    },
+    {
+      "name": "HTML body with header",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/xhtml+xml" }],
+        "url": { "raw": "https://x.test/html" },
+        "body": {
+          "mode": "raw",
+          "raw": "<p>hi</p>",
+          "options": { "raw": { "language": "html" } }
+        }
+      }
+    }
+  ]
+}

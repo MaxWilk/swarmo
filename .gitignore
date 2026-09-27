@@ -1,0 +1,8 @@
+/target/
+node_modules/
+/ui/dist/
+/demo-workspace/
+*.log
+.DS_Store
+/dist/
+/testing/

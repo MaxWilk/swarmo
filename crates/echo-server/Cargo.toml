@@ -1,0 +1,20 @@
+[package]
+name = "echo-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+name = "echo_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "echo-server"
+path = "src/main.rs"
+
+[dependencies]
+axum = { workspace = true, features = ["multipart", "ws"] }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true

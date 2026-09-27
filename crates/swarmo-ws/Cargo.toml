@@ -1,0 +1,28 @@
+[package]
+name = "swarmo-ws"
+version = "0.1.0"
+edition = "2021"
+description = "WebSocket execution for Swarmo: one scripted session, measured"
+
+# Like swarmo-http and swarmo-grpc, this crate must stay free of Tauri so it
+# builds and tests standalone, and so the load engine can drive it directly.
+
+[dependencies]
+swarmo-core.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+tokio-tungstenite = { workspace = true }
+futures.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+base64.workspace = true
+http.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+# The workspace pins rustls minimal; the ring provider is needed here for the
+# accept-any-certificate verifier behind `verifyTls: false`.
+rustls = { workspace = true, features = ["ring", "std", "tls12"] }
+webpki-roots.workspace = true
+
+[dev-dependencies]
+echo-server = { path = "../echo-server" }

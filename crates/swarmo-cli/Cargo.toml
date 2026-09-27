@@ -1,0 +1,23 @@
+[package]
+name = "swarmo-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "swarmo"
+path = "src/main.rs"
+
+[dependencies]
+swarmo-core.workspace = true
+swarmo-load.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+uuid.workspace = true
+serde_json.workspace = true
+tracing-subscriber.workspace = true
+
+[dev-dependencies]
+echo-server = { path = "../echo-server" }
+tempfile.workspace = true

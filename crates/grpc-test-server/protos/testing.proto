@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package swarmo.testing;
+
+import "google/protobuf/timestamp.proto";
+
+// A deliberately small service covering everything Swarmo's gRPC tests need:
+// echoing, delays, forced statuses, a token to capture, and one streaming
+// method that exists only so tests can assert streaming is refused.
+service TestService {
+  rpc Echo(EchoRequest) returns (EchoReply);
+  rpc Delay(DelayRequest) returns (DelayReply);
+  rpc Fail(FailRequest) returns (FailReply);
+  rpc Login(LoginRequest) returns (LoginReply);
+  rpc StreamNumbers(StreamRequest) returns (stream StreamReply);
+  // Client streaming: sums every value sent.
+  rpc Sum(stream SumRequest) returns (SumReply);
+  // Bidirectional: echoes each message back, upper-cased.
+  rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+}
+
+message Nested {
+  string label = 1;
+  repeated int32 values = 2;
+}
+
+message EchoRequest {
+  string message = 1;
+  int32 number = 2;
+  bool flag = 3;
+  Nested nested = 4;
+  google.protobuf.Timestamp at = 5;
+  map<string, string> tags = 6;
+}
+
+message EchoReply {
+  string message = 1;
+  int32 number = 2;
+  bool flag = 3;
+  Nested nested = 4;
+  google.protobuf.Timestamp at = 5;
+  map<string, string> tags = 6;
+  // Every ascii metadata key/value the server actually received.
+  map<string, string> metadata = 7;
+  // Increments per call, so tests can prove separate calls happened.
+  uint64 call_count = 8;
+}
+
+message DelayRequest { uint64 ms = 1; }
+message DelayReply { uint64 delayed_ms = 1; }
+
+message FailRequest {
+  // A gRPC status code (0..=16). 0 succeeds.
+  int32 code = 1;
+  string message = 2;
+}
+message FailReply { string never = 1; }
+
+message LoginRequest { string user = 1; }
+message LoginReply {
+  string token = 1;
+  int64 expires_in = 2;
+}
+
+message StreamRequest { int32 count = 1; }
+message SumRequest { int32 value = 1; }
+message SumReply {
+  int64 total = 1;
+  int32 count = 2;
+}
+message ChatMessage { string text = 1; }
+message StreamReply { int32 value = 1; }

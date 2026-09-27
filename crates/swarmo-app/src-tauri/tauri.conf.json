@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Swarmo",
+  "version": "0.1.0",
+  "identifier": "dev.swarmo.desktop",
+  "build": {
+    "frontendDist": "../../../ui/dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm --prefix ../../ui run dev",
+    "beforeBuildCommand": "npm --prefix ../../ui run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Swarmo",
+        "width": 1440,
+        "height": 900,
+        "minWidth": 900,
+        "minHeight": 600,
+        "resizable": true,
+        "center": true,
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "dmg", "appimage", "deb"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/icon.png",
+      "icons/icon.ico"
+    ],
+    "copyright": "",
+    "category": "DeveloperTool",
+    "shortDescription": "API workbench and load testing",
+    "longDescription": "Swarmo is a local-first API client with a built-in load-testing engine. Debug a request, then promote it to a load scenario without leaving the app."
+  }
+}

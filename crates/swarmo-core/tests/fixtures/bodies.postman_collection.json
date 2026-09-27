@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "Body Types",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Urlencoded",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "grant_type", "value": "password" },
+            { "key": "scope", "value": "read", "disabled": true }
+          ]
+        },
+        "url": { "raw": "https://api.example.com/token" }
+      }
+    },
+    {
+      "name": "Form data",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "title", "value": "A photo", "type": "text" },
+            { "key": "file", "type": "file", "src": "/tmp/photo.png" }
+          ]
+        },
+        "url": { "raw": "https://api.example.com/upload" }
+      }
+    },
+    {
+      "name": "GraphQL",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query Me { me { id name } }",
+            "variables": "{\"limit\": 5}"
+          }
+        },
+        "url": { "raw": "https://api.example.com/graphql" }
+      }
+    },
+    {
+      "name": "Plain text",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "text/csv" }],
+        "body": { "mode": "raw", "raw": "a,b\n1,2" },
+        "url": { "raw": "https://api.example.com/csv" }
+      }
+    },
+    {
+      "name": "Binary file",
+      "request": {
+        "method": "PUT",
+        "body": { "mode": "file", "file": { "src": "/tmp/blob.bin" } },
+        "url": { "raw": "https://api.example.com/blob" }
+      }
+    },
+    {
+      "name": "API key auth",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            { "key": "key", "value": "X-Api-Key" },
+            { "key": "value", "value": "secret" },
+            { "key": "in", "value": "header" }
+          ]
+        },
+        "url": { "raw": "https://api.example.com/me" }
+      }
+    },
+    {
+      "name": "Bare url string",
+      "request": "https://api.example.com/ping"
+    }
+  ]
+}

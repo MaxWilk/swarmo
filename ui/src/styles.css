@@ -1,0 +1,1185 @@
+/* Swarmo design tokens and base styles.
+ * Light is the default palette; dark overrides only the token values. */
+
+:root {
+  --bg: #ffffff;
+  --bg-sunken: #f6f7f9;
+  --bg-raised: #ffffff;
+  --bg-hover: #eef0f4;
+  --bg-active: #e4e7ec;
+  --bg-input: #ffffff;
+
+  --border: #dfe3e8;
+  --border-strong: #c3c9d2;
+
+  --text: #16181d;
+  --text-muted: #5c6470;
+  --text-faint: #8a929e;
+  --text-inverse: #ffffff;
+
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+  --accent-text: #ffffff;
+
+  --ok: #067647;
+  --ok-soft: #e8f5ee;
+  --warn: #92610a;
+  --warn-soft: #fdf3e0;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --info: #175cd3;
+
+  --method-get: #067647;
+  --method-post: #b54708;
+  --method-put: #175cd3;
+  --method-patch: #6941c6;
+  --method-delete: #b42318;
+  --method-other: #5c6470;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.1);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.16);
+
+  --radius: 6px;
+  /* Pane padding. The sticky table header offsets below depend on it. */
+  --pad: 12px;
+  --radius-lg: 10px;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --mono: "Cascadia Mono", "JetBrains Mono", "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --rail-w: 60px;
+  --sidebar-w: 280px;
+  --header-h: 40px;
+}
+
+:root[data-theme="dark"] {
+  --bg: #16181d;
+  --bg-sunken: #101216;
+  --bg-raised: #1d2026;
+  --bg-hover: #262a32;
+  --bg-active: #2f343d;
+  --bg-input: #1d2026;
+
+  --border: #2b2f37;
+  --border-strong: #3d434e;
+
+  --text: #e6e8ec;
+  --text-muted: #9aa2ae;
+  --text-faint: #6b7280;
+  --text-inverse: #16181d;
+
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-soft: #232544;
+  --accent-text: #ffffff;
+
+  --ok: #4ade80;
+  --ok-soft: #16281e;
+  --warn: #fbbf24;
+  --warn-soft: #2a2113;
+  --danger: #f87171;
+  --danger-soft: #2d1a1a;
+  --info: #60a5fa;
+
+  --method-get: #4ade80;
+  --method-post: #fbbf24;
+  --method-put: #60a5fa;
+  --method-patch: #c4b5fd;
+  --method-delete: #f87171;
+  --method-other: #9aa2ae;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
+
+/* -- layout ---------------------------------------------------------------- */
+
+.app {
+  display: flex;
+  height: 100%;
+}
+
+.rail {
+  width: var(--rail-w);
+  flex: 0 0 var(--rail-w);
+  background: var(--bg-sunken);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 4px;
+}
+
+.rail-btn {
+  width: 46px;
+  height: 46px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
+.rail-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+.rail-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.rail-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.rail-spacer {
+  flex: 1;
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex: 0 0 var(--sidebar-w);
+  background: var(--bg-sunken);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel-header {
+  height: var(--header-h);
+  flex: 0 0 var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.scroll {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* -- controls -------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+.btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.btn.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.btn.danger {
+  color: var(--danger);
+  border-color: var(--border);
+}
+.btn.danger:hover:not(:disabled) {
+  background: var(--danger-soft);
+}
+.btn.ghost {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.btn.ghost:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.btn.sm {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+.btn.icon {
+  width: 28px;
+  padding: 0;
+}
+.btn.icon.sm {
+  width: 24px;
+}
+
+.input,
+.select,
+.textarea {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-input);
+  color: var(--text);
+  width: 100%;
+  min-width: 0;
+  user-select: text;
+}
+.textarea {
+  height: auto;
+  padding: 6px 8px;
+  resize: vertical;
+  font-family: var(--mono);
+}
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.input.mono {
+  font-family: var(--mono);
+}
+.select {
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field > label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.hint {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* -- tabs ------------------------------------------------------------------ */
+
+.tabstrip {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-sunken);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 0 0 auto;
+  scrollbar-width: none;
+}
+.tabstrip::-webkit-scrollbar {
+  display: none;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px 0 12px;
+  height: 34px;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 220px;
+}
+.tab:hover {
+  background: var(--bg-hover);
+}
+.tab.active {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+.tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tab-close {
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.tab-close:hover {
+  opacity: 1;
+  background: var(--bg-active);
+}
+.tab-dirty {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: 0 0 auto;
+}
+
+.subtabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+  flex: 0 0 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.subtabs::-webkit-scrollbar {
+  display: none;
+}
+.subtab {
+  border: none;
+  background: transparent;
+  padding: 7px 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.subtab:hover {
+  color: var(--text);
+}
+.subtab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.count-badge {
+  background: var(--bg-active);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 0 5px;
+  font-size: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+.subtab.active .count-badge {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* -- tree ------------------------------------------------------------------ */
+
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding-right: 6px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  white-space: nowrap;
+  position: relative;
+}
+.tree-row:hover {
+  background: var(--bg-hover);
+}
+.tree-row.selected {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tree-row.drop-target {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tree-caret {
+  width: 14px;
+  flex: 0 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+}
+.tree-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+.tree-actions {
+  display: none;
+  gap: 2px;
+}
+.tree-row:hover .tree-actions {
+  display: flex;
+}
+
+.method {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  flex: 0 0 auto;
+  width: 34px;
+  text-align: right;
+}
+.method.get { color: var(--method-get); }
+.method.post { color: var(--method-post); }
+.method.put { color: var(--method-put); }
+.method.patch { color: var(--method-patch); }
+.method.delete { color: var(--method-delete); }
+.method.head, .method.options, .method.other { color: var(--method-other); }
+
+/* -- tables ---------------------------------------------------------------- */
+
+.kv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.kv-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 1;
+}
+/*
+ * A sticky header inside a padded scroller.
+ *
+ * Sticky offsets resolve against the scroll container's *content* box, which
+ * the padding insets — so `top: 0` parks the header a padding's width below
+ * the top of the scroll port, leaving an open band where rows scroll past
+ * above the header. (Measured in the same engine the app ships: `top: 0`
+ * leaves a 12px gap, `top: -12px` leaves none.) Pulling the header up by the
+ * padding sits it flush; the space it gives up is added back inside the cell
+ * so the header still has room to breathe.
+ *
+ * Scoped to padded scrollers: an unpadded one — `.data-table` in the run
+ * views — is already flush, and this offset would hide its header instead.
+ */
+.scroll.pad .kv-table th {
+  top: calc(-1 * var(--pad));
+  padding-top: calc(var(--pad) + 4px);
+}
+
+.kv-table td {
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.kv-table td .input {
+  border-color: transparent;
+  background: transparent;
+  height: 26px;
+}
+.kv-table td .input:hover {
+  border-color: var(--border);
+}
+.kv-table td .input:focus {
+  background: var(--bg-input);
+}
+.kv-table tr.disabled td .input {
+  color: var(--text-faint);
+  text-decoration: line-through;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.data-table th {
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.data-table th:first-child,
+.data-table td:first-child {
+  text-align: left;
+}
+.data-table th:hover {
+  color: var(--text);
+}
+.data-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+.data-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+/* A table of text rather than of numbers.
+ *
+ * The default `nowrap` is right for the stat tables, where columns of figures
+ * should line up and never reflow. It is wrong for headers: a Set-Cookie or a
+ * CSP is hundreds of characters with no spaces in it, so on one line it simply
+ * runs off the right edge and has to be scrolled to be read at all.
+ */
+.data-table.text th,
+.data-table.text td {
+  text-align: left;
+  white-space: normal;
+  /* Not `break-word`: a JWT or a cookie has no break opportunity in it, so
+     the line has to be allowed to break mid-token or nothing changes. */
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+/* The name column takes only what it needs, leaving the rest to the value. */
+.data-table.text th:first-child,
+.data-table.text td:first-child {
+  white-space: nowrap;
+  width: 1%;
+  padding-right: 14px;
+}
+
+/* A message shown as a block — a script error, a failed check — is arbitrary
+   text too, and just as likely to contain one long unbroken token. */
+.status-pill.block {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+
+/* -- status & badges ------------------------------------------------------- */
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.status-pill.ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.status-pill.warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.status-pill.err {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.status-pill.neutral {
+  background: var(--bg-active);
+  color: var(--text-muted);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+.stat-tile {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px 12px;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+.stat-value.ok { color: var(--ok); }
+.stat-value.err { color: var(--danger); }
+.stat-sub {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* -- modal & toast --------------------------------------------------------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 24, 40, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.modal {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 540px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal.wide {
+  max-width: 760px;
+}
+.modal-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 650;
+  font-size: 14px;
+}
+.modal-body {
+  padding: 16px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.modal-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.toasts {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 200;
+  max-width: 420px;
+}
+.toast {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--text-muted);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.toast.error { border-left-color: var(--danger); }
+.toast.success { border-left-color: var(--ok); }
+.toast.info { border-left-color: var(--info); }
+.toast-body { flex: 1; min-width: 0; }
+.toast-title { font-weight: 600; }
+.toast-msg {
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  max-height: 200px;
+  overflow: auto;
+}
+
+/* -- misc ------------------------------------------------------------------ */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  color: var(--text-faint);
+  text-align: center;
+  padding: 32px;
+}
+.empty h2 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.empty p {
+  margin: 0;
+  max-width: 380px;
+}
+
+.mono { font-family: var(--mono); }
+.muted { color: var(--text-muted); }
+.faint { color: var(--text-faint); }
+.selectable { user-select: text; }
+.row { display: flex; align-items: center; gap: 8px; }
+.col { display: flex; flex-direction: column; gap: 8px; }
+.grow { flex: 1; min-width: 0; }
+.wrap { flex-wrap: wrap; }
+.pad { padding: var(--pad); }
+.nowrap { white-space: nowrap; }
+.right { margin-left: auto; }
+.sep {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.cm-host {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-input);
+  min-height: 0;
+}
+.cm-host.flush {
+  border: none;
+  border-radius: 0;
+}
+.cm-editor {
+  height: 100%;
+  user-select: text;
+}
+.cm-editor.cm-focused {
+  outline: none;
+}
+.cm-scroller {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.split {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.split.vertical {
+  flex-direction: column;
+}
+.splitter {
+  flex: 0 0 5px;
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+}
+.split.vertical > .splitter {
+  cursor: row-resize;
+}
+.splitter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  margin: 0 2px;
+}
+.split.vertical > .splitter::after {
+  margin: 2px 0;
+}
+.splitter:hover::after {
+  background: var(--accent);
+}
+
+.unresolved {
+  text-decoration: underline wavy var(--danger);
+  text-underline-offset: 2px;
+}
+
+.spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex: 0 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.uplot {
+  font-family: var(--font) !important;
+}
+
+/* uPlot ships light-theme defaults for the parts it renders as DOM, so pin
+   them to the theme's tokens or they vanish on a dark background. */
+.u-legend {
+  color: var(--text);
+  font-size: 11px;
+}
+.u-legend .u-marker {
+  border-color: currentColor;
+}
+.u-legend .u-inactive {
+  opacity: 0.4;
+}
+.u-cursor-x,
+.u-cursor-y {
+  border-color: var(--border-strong) !important;
+}
+.u-select {
+  background: var(--accent-soft);
+}
+.u-over,
+.u-under {
+  border-color: var(--border);
+}
+
+/* -- load stages ---------------------------------------------------------- */
+
+/* The grip is the only draggable part of a stage row, so dragging never
+   competes with selecting text in the number inputs beside it. */
+.stage-grip {
+  cursor: grab;
+  color: var(--text-faint);
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+}
+.stage-grip:hover { color: var(--text); }
+.stage-grip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: var(--radius);
+}
+.stage-row.dragging, .step-row.dragging { opacity: 0.4; }
+/* An insertion line on the edge the row would land against, so the drop
+   target is unambiguous while dragging. */
+.stage-row.drop-before td { box-shadow: inset 0 2px 0 0 var(--accent); }
+.stage-row.drop-after td { box-shadow: inset 0 -2px 0 0 var(--accent); }
+.step-row.drop-before { box-shadow: inset 0 2px 0 0 var(--accent); }
+.step-row.drop-after { box-shadow: inset 0 -2px 0 0 var(--accent); }
+
+.stage-chart { display: block; overflow: visible; }
+.stage-chart .grid { stroke: var(--border); stroke-width: 1; }
+.stage-chart .tick { fill: var(--text-faint); font-size: 10px; }
+.stage-chart .axis { fill: var(--text-muted); font-size: 10px; font-weight: 600; }
+.stage-chart .line { fill: none; stroke: var(--accent); stroke-width: 2; }
+.stage-chart .area { fill: var(--accent); opacity: 0.12; stroke: none; }
+.stage-chart .dot { fill: var(--accent); }
+
+/* -- menus ---------------------------------------------------------------- */
+
+.menu-host { position: relative; display: inline-flex; }
+.menu-pop {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  min-width: 190px;
+  padding: 4px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-item:hover, .menu-item:focus-visible { background: var(--bg-hover); }
+
+/* Six tiles no longer fit on one row at every window size, so wrap into
+   aligned rows instead of squeezing each one narrower. */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+/* -- run comparison ------------------------------------------------------- */
+
+/* Improvement and regression, not raw direction: whether a change is good
+   depends on the metric, so the colour is decided in code and only rendered
+   here. */
+.delta { font-variant-numeric: tabular-nums; }
+.delta.ok { color: var(--ok); }
+.delta.err { color: var(--danger); }
+.delta.neutral { color: var(--text-faint); }
+
+/* -- latency histogram ---------------------------------------------------- */
+
+.hist-bar { fill: var(--accent); }
+.hist-bar.hot { fill: var(--accent-strong, var(--accent)); opacity: 0.8; }
+
+/* A run still going, shown on the rail so it is visible from any section. */
+.rail-btn { position: relative; }
+.rail-dot {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+/* A repeated block sits inside the stage list rather than on its own screen,
+   so the whole ramp reads top to bottom in one place. */
+.repeat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  margin: 2px 0;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--bg-hover);
+}
+.repeat-block .kv-table { background: transparent; }
+
+/* -- insert-variable picker ------------------------------------------------ */
+
+/* Wide enough for two argument fields beside the generator select; the popover
+   is anchored to a button that can sit near either window edge, so it hangs
+   from whichever side leaves it on screen. */
+.menu-pop.token-pop {
+  width: 460px;
+  max-width: min(460px, calc(100vw - 32px));
+  max-height: min(560px, calc(100vh - 96px));
+  overflow: auto;
+  padding: 10px;
+  gap: 8px;
+  cursor: default;
+}
+.menu-pop.token-pop.align-left { right: auto; left: 0; }
+
+/* The nested "each value is" block, so a repeat's element reads as part of the
+   repeat rather than as a second, unrelated generator. */
+.token-pop .inset {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-sunken);
+}
+
+.token-preview {
+  padding: 6px 8px;
+  min-height: 32px;
+  max-height: 110px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-sunken);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+/* The literal token, shown small: useful to recognise, not to read closely. */
+.token-source {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 260px;
+}
+
+/* The `{}` affix inside a key/value cell. Only ink when the row is hovered or
+   the picker is open, so a dense table does not gain a column of loud buttons. */
+.kv-table .kv-cell { position: relative; display: flex; align-items: center; gap: 2px; }
+.kv-table .kv-cell > .menu-host { flex: 0 0 auto; }
+.kv-table .kv-cell > .menu-host > .btn { opacity: 0; transition: opacity 90ms ease; }
+.kv-table tr:hover .kv-cell > .menu-host > .btn,
+.kv-table .kv-cell > .menu-host > .btn:focus-visible,
+.kv-table .kv-cell:focus-within > .menu-host > .btn { opacity: 1; }
+
+/* A body/message editor's own label, matching .field > label without needing
+   the flex column that wrapper brings. */
+.editor-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* A key/value facts table: the label column reads as a label, not as data. */
+.data-table.facts-table td:first-child {
+  color: var(--text-muted);
+  width: 40%;
+  white-space: nowrap;
+}
+
+/* The chip naming the load test the Runs list is narrowed to. */
+.scope-chip {
+  gap: 6px;
+  padding: 4px 4px 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-sunken);
+  font-size: 12px;
+}
+.scope-chip .grow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* The Load panel header doubles as the root drop target for moving a test
+   back out of a folder. */
+.panel-header.drop-target {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+
+/* -- WebSocket transcript ------------------------------------------------- */
+
+.ws-frame {
+  display: grid;
+  grid-template-columns: 22px 64px 1fr;
+  gap: 8px;
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  align-items: baseline;
+}
+.ws-frame .dir { font-weight: 700; }
+.ws-frame.out .dir { color: var(--accent); }
+.ws-frame.in .dir { color: var(--ok); }
+.ws-frame .at { color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.ws-frame .body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ws-message-row {
+  display: grid;
+  grid-template-columns: 30px 96px 1fr 150px 30px;
+  gap: 6px;
+  align-items: start;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}

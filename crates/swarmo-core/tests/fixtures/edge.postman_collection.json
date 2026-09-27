@@ -1,0 +1,71 @@
+{
+  "info": {
+    "name": "Edge Cases",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "CON",
+      "request": { "method": "GET", "url": { "raw": "https://x.test/reserved" } }
+    },
+    {
+      "name": "Has/Illegal:Chars?",
+      "request": { "method": "GET", "url": { "raw": "https://x.test/illegal" } }
+    },
+    {
+      "name": "Duplicate",
+      "request": { "method": "GET", "url": { "raw": "https://x.test/one" } }
+    },
+    {
+      "name": "Duplicate",
+      "request": { "method": "GET", "url": { "raw": "https://x.test/two" } }
+    },
+    {
+      "name": "Unsupported script",
+      "request": { "method": "GET", "url": { "raw": "https://x.test/cookies" } },
+      "event": [
+        {
+          "listen": "test",
+          "script": { "exec": ["const c = pm.cookies.get('session');"] }
+        }
+      ]
+    },
+    {
+      "name": "Unsupported auth",
+      "request": {
+        "method": "GET",
+        "auth": { "type": "oauth2", "oauth2": [] },
+        "url": { "raw": "https://x.test/oauth" }
+      }
+    },
+    {
+      "name": "Query key auth",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            { "key": "key", "value": "token" },
+            { "key": "value", "value": "abc" },
+            { "key": "in", "value": "query" }
+          ]
+        },
+        "url": { "raw": "https://x.test/querykey" }
+      }
+    },
+    {
+      "name": "Nested",
+      "item": [
+        {
+          "name": "Deeper",
+          "item": [
+            {
+              "name": "Leaf",
+              "request": { "method": "GET", "url": { "raw": "https://x.test/leaf" } }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

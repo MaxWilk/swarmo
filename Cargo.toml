@@ -1,0 +1,87 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/swarmo-core",
+    "crates/swarmo-http",
+    "crates/swarmo-script",
+    "crates/swarmo-load",
+    "crates/swarmo-app/src-tauri",
+    "crates/swarmo-cli",
+    "crates/swarmo-grpc",
+    "crates/echo-server",
+    "crates/grpc-test-server",
+    "crates/swarmo-ws",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+license = "MIT"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+anyhow = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+tokio = { version = "1", features = ["full"] }
+tokio-util = "0.7"
+reqwest = { version = "0.12", default-features = false, features = [
+    "rustls-tls",
+    "json",
+    "stream",
+    "gzip",
+    "brotli",
+    "deflate",
+    "cookies",
+    "multipart",
+    "http2",
+] }
+hdrhistogram = "7"
+regex = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rand = "0.8"
+base64 = "0.22"
+percent-encoding = "2"
+mime_guess = "2"
+url = "2"
+futures = "0.3"
+bytes = "1"
+axum = "0.7"
+tempfile = "3"
+
+# gRPC. `protox` compiles .proto at runtime and in build scripts, so neither
+# the app nor CI ever needs a `protoc` binary installed.
+tonic = { version = "0.14", default-features = false }
+tonic-reflection = "0.14"
+tonic-prost = "0.14"
+tonic-prost-build = "0.14"
+prost = "0.14"
+prost-types = "0.14"
+prost-reflect = { version = "0.16", features = ["serde", "text-format"] }
+protox = "0.9"
+# Pinned to whatever tonic pulls in: the custom certificate verifier used for
+# the "verify TLS" toggle must implement *that* rustls' trait.
+rustls = { version = "0.23", default-features = false }
+http = "1"
+tower = "0.5"
+
+swarmo-core = { path = "crates/swarmo-core" }
+swarmo-http = { path = "crates/swarmo-http" }
+swarmo-ws = { path = "crates/swarmo-ws" }
+# WebSocket transport. rustls 0.23 is what reqwest's rustls-tls and this
+# version of tokio-tungstenite both build on, so one TLS stack serves all
+# three protocols.
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-webpki-roots"] }
+webpki-roots = "0.26"
+swarmo-script = { path = "crates/swarmo-script" }
+swarmo-load = { path = "crates/swarmo-load" }
+swarmo-grpc = { path = "crates/swarmo-grpc" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true

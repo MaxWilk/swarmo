@@ -1,0 +1,14 @@
+{
+  "name": "swarmo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "An API workbench where debugging a request and load-testing it are the same artifact",
+  "scripts": {
+    "setup": "npm --prefix ui install",
+    "dev": "cd crates/swarmo-app && npx --prefix ../../ui tauri dev",
+    "build": "cd crates/swarmo-app && npx --prefix ../../ui tauri build",
+    "ci": "node tools/ci.mjs",
+    "icons": "node tools/make-icons.mjs",
+    "demo": "node tools/make-demo-workspace.mjs"
+  }
+}

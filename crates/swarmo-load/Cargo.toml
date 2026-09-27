@@ -1,0 +1,32 @@
+[package]
+name = "swarmo-load"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+swarmo-core.workspace = true
+swarmo-script.workspace = true
+swarmo-http.workspace = true
+swarmo-grpc.workspace = true
+swarmo-ws.workspace = true
+prost-reflect.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+futures.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+reqwest.workspace = true
+hdrhistogram.workspace = true
+rand.workspace = true
+tracing.workspace = true
+url.workspace = true
+
+[dev-dependencies]
+echo-server = { path = "../echo-server" }
+grpc-test-server = { path = "../grpc-test-server" }
+tempfile.workspace = true
+uuid.workspace = true
+serde_json.workspace = true
