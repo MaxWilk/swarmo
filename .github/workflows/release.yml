@@ -1,0 +1,140 @@
+# Builds the desktop app and the CLI for Windows, macOS and Linux when a
+# version tag is pushed, and attaches everything to a draft GitHub release.
+# Review the draft, write the notes, then publish it by hand.
+#
+#   git tag v0.1.0
+#   git push origin v0.1.0
+#
+# The tag should match the version in tauri.conf.json and Cargo.toml, since
+# that is the version the installers are named after.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.create.outputs.id }}
+    steps:
+      - name: Create the draft release
+        id: create
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft \
+            --title "Swarmo ${TAG#v}" \
+            --notes "Installers are not code-signed yet. On Windows, SmartScreen will warn: choose **More info → Run anyway**. On macOS, right-click the app and choose **Open** the first time."
+          id=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json databaseId -q .databaseId)
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+  desktop:
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            args: ""
+          - platform: macos-latest
+            args: --target aarch64-apple-darwin
+          - platform: macos-latest
+            args: --target x86_64-apple-darwin
+          # The oldest supported Ubuntu, so the AppImage and .deb run on the
+          # widest range of distributions (glibc is forward-compatible only).
+          - platform: ubuntu-22.04
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        if: startsWith(matrix.platform, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          # Both macOS builds run on Apple silicon, so the Intel one
+          # cross-compiles.
+          targets: ${{ startsWith(matrix.platform, 'macos') && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.args }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install UI dependencies
+        run: npm ci --prefix ui
+
+      # The Tauri CLI is a dev dependency of ui/, but must run from the crate
+      # directory: beforeBuildCommand and frontendDist are resolved from there.
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          releaseId: ${{ needs.create-release.outputs.id }}
+          projectPath: crates/swarmo-app
+          tauriScript: npx --prefix ../../ui tauri
+          args: ${{ matrix.args }}
+
+  cli:
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+          - platform: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: cli-${{ matrix.target }}
+
+      - name: Build the CLI
+        run: cargo build --release --locked -p swarmo-cli --target ${{ matrix.target }}
+
+      - name: Attach it to the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          dir="target/$TARGET/release"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            asset="swarmo-cli-$TARGET.exe"
+            cp "$dir/swarmo.exe" "$asset"
+          else
+            # Archived, so the executable bit survives the download.
+            asset="swarmo-cli-$TARGET.tar.gz"
+            tar -czf "$asset" -C "$dir" swarmo
+          fi
+          gh release upload "$TAG" "$asset" --repo "$GITHUB_REPOSITORY" --clobber
